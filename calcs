@@ -1,0 +1,37 @@
+MWs = {"MeOH": 32.04, "DMF": 79.09, "H2O": 18.01528, "Cyclohexanone": 98.15,
+       "P-nitrobenzaldehyde": 151.12}  # Molecular weight in g/mol - DON'T CHANGE
+densities = {"MeOH": 792, "DMF": 944, "H2O": 997, "Cyclohexanone": 948}  # Densities in g/L - DON'T CHANGE
+
+volumes_ml = {"MeOH": 0.36, "DMF": 0.36, "H2O": 0.24, "Cyclohexanone": 0.41}  # Volumes in mL
+volumes = {"MeOH": 0.36 / 1000, "DMF": 0.36 / 1000, "H2O": 0.24 / 1000, "Cyclohexanone": 0.41 / 1000}  # Volumes in L
+weights = {"MeOH": (volumes["MeOH"] * densities["MeOH"]), "DMF": (volumes["DMF"] * densities["DMF"]),
+           "H2O": (volumes["H2O"] * densities["H2O"]),
+           "Cyclohexanone": (volumes["Cyclohexanone"] * densities["Cyclohexanone"]),
+           "P-nitrobenzaldehyde": 0.119}  # Mass in g
+mol = {"MeOH": (weights["MeOH"] / MWs["MeOH"]), "DMF": (weights["DMF"] / MWs["DMF"]),
+       "H2O": (weights["H2O"] / MWs["H2O"]), "Cyclohexanone": (weights["Cyclohexanone"] / MWs["Cyclohexanone"]),
+       "P-nitrobenzaldehyde": (weights["P-nitrobenzaldehyde"] / MWs["P-nitrobenzaldehyde"])}
+
+print("--------------------------------------------")
+for key, value in MWs.items():
+    print(key + " has MW of " + str(value) + " g/mol")
+print("--------------------------------------------")
+for key, value in mol.items():
+    print(key + " : " + str(value) + " mol")
+print("--------------------------------------------")
+
+ratio_cyclo = mol["Cyclohexanone"] * 1000
+ratio_alde = mol["P-nitrobenzaldehyde"] * 1000
+
+print(f"The ketone:aldehyde ratio is {ratio_cyclo:.2} : {ratio_alde:.2}")
+
+conc_cyclo = mol["Cyclohexanone"] / (volumes["DMF"] + volumes["H2O"])
+conc_alde = mol["P-nitrobenzaldehyde"] / (volumes["DMF"] + volumes["H2O"] + volumes["Cyclohexanone"])
+
+mol_cyclo_24 = conc_cyclo * 8.64/1000
+mol_alde_24 = conc_alde * 8.64/1000
+
+print(
+    f"Cyclohexanone has {conc_cyclo:.2} g/L concentration in initial reagent solution and {mol_cyclo_24:.2} mol in 24 hours, \n"
+    f"while p-nitrobenzaldehyde has {conc_alde:.2} g/L concentration in initial reagent solution and {mol_alde_24:.2} mol in 24 hours.")
+print("------------------------------------------------------------------------------------------------------------")
