@@ -1,0 +1,55 @@
+# This is to calculate depending on the desired volume of the reagent solution based on available syringes
+volumes_initial = [0.36, 0.24, 0.41, 0.119] # Initial compound volumes in ml, based on the stoichiometry of reaction of interest
+volumes_increased =[] 
+for i in volumes_initial:
+    volume_increase = i*15
+    volumes_increased.append(volume_increase)
+print("Reagents [DMF or MeOH, H2O, Cyclohexanone, P-nitrobenzaldehyde]") # Names of reagents
+print(f"with respective volumes (and mass for aldehyde) of {volumes_increased}")
+print("The total reagent solution volume is " + str(volumes_increased[0]+volumes_increased[1] + volumes_increased[2]+volumes_increased[3])+ " ml." )
+# End
+
+MWs = {"MeOH": 32.04, "DMF": 79.09, "H2O": 18.01528, "Cyclohexanone": 98.15,
+       "P-nitrobenzaldehyde": 151.12}  # Molecular weight in g/mol
+densities = {"MeOH": 792, "DMF": 944, "H2O": 997, "Cyclohexanone": 948}  # Densities in g/L 
+
+volumes = {"MeOH": 5.4 / 1000, "DMF": 5.4 / 1000, "H2O": 3.6 / 1000, "Cyclohexanone": 6.15 / 1000}  # Volumes in L
+weights = {"MeOH": (volumes["MeOH"] * densities["MeOH"]), "DMF": (volumes["DMF"] * densities["DMF"]),
+           "H2O": (volumes["H2O"] * densities["H2O"]),
+           "Cyclohexanone": (volumes["Cyclohexanone"] * densities["Cyclohexanone"]),
+           "P-nitrobenzaldehyde": 1.785}  # Mass in g
+mol = {"MeOH": (weights["MeOH"] / MWs["MeOH"]), "DMF": (weights["DMF"] / MWs["DMF"]),
+       "H2O": (weights["H2O"] / MWs["H2O"]), "Cyclohexanone": (weights["Cyclohexanone"] / MWs["Cyclohexanone"]),
+       "P-nitrobenzaldehyde": (weights["P-nitrobenzaldehyde"] / MWs["P-nitrobenzaldehyde"])}
+
+
+print("--------------------------------------------")
+for key, value in MWs.items():
+    print(key + " has MW of " + str(value) + " g/mol")
+print("--------------------------------------------")
+for key, value in mol.items():
+    print(key + " : " + str(value) + " mol in reagent solution.")
+print("--------------------------------------------")
+
+ratio_cyclo = mol["Cyclohexanone"] * 10
+ratio_alde = mol["P-nitrobenzaldehyde"] * 10
+
+print(f"The ketone:aldehyde ratio is {ratio_cyclo:.2} : {ratio_alde:.2} which is {ratio_cyclo/ratio_alde}.")
+print("--------------------------------------------")
+conc_cyclo = mol["Cyclohexanone"] / (volumes["DMF"] + volumes["H2O"])
+conc_alde = mol["P-nitrobenzaldehyde"] / (volumes["DMF"] + volumes["H2O"] + volumes["Cyclohexanone"])
+
+hour = 24
+volume_flow = int(input("How much flow rate (ul/min) are you using for an " + str(hour) + "hr experiment?: "))
+volume_exp = volume_flow * 60 * 0.001 * hour
+mol_cyclo_exp = conc_cyclo * volume_exp/1000
+mol_alde_exp = conc_alde * volume_exp/1000
+
+print(
+    f"Cyclohexanone has {conc_cyclo:.2} g/L concentration in initial reagent solution and {mol_cyclo_exp:.2} mol in {hour} hours, \n"
+    f"while p-nitrobenzaldehyde has {conc_alde:.2} g/L concentration in initial reagent solution and {mol_alde_exp:.2} mol in {hour} hours. The total volume that will be produced during this time is {volume_exp} ml.")
+print("------------------------------------------------------------------------------------------------------------")
+
+# n = m/MW
+# m = p * V
+# n = C * V
